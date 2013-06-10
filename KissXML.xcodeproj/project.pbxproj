@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F6045BF41765BD1D00E85BB0 /* KissXMLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6045BF31765BD1D00E85BB0 /* KissXMLTests.m */; };
 		F6045BF71765BE1700E85BB0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F6045BF51765BE0100E85BB0 /* libxml2.dylib */; };
 		F6B0DE8A1763286E00043B12 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6B0DE891763286E00043B12 /* Cocoa.framework */; };
 		F6B0DE9C1763286E00043B12 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6B0DE9B1763286E00043B12 /* SenTestingKit.framework */; };
 		F6B0DE9D1763286E00043B12 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6B0DE891763286E00043B12 /* Cocoa.framework */; };
 		F6B0DEA01763286E00043B12 /* libKissXML.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F6B0DE861763286E00043B12 /* libKissXML.a */; };
 		F6B0DEA61763286E00043B12 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F6B0DEA41763286E00043B12 /* InfoPlist.strings */; };
-		F6B0DEA91763286E00043B12 /* KissXMLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6B0DEA81763286E00043B12 /* KissXMLTests.m */; };
 		F6B0DEB91763292B00043B12 /* DDXML.h in Headers */ = {isa = PBXBuildFile; fileRef = F6B0DEB21763292B00043B12 /* DDXML.h */; };
 		F6B0DEBA1763292B00043B12 /* DDXMLDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = F6B0DEB31763292B00043B12 /* DDXMLDocument.h */; };
 		F6B0DEBB1763292B00043B12 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = F6B0DEB41763292B00043B12 /* DDXMLDocument.m */; };
@@ -39,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F6045BF21765BD1D00E85BB0 /* KissXMLTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KissXMLTests.h; sourceTree = "<group>"; };
+		F6045BF31765BD1D00E85BB0 /* KissXMLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KissXMLTests.m; sourceTree = "<group>"; };
 		F6045BF51765BE0100E85BB0 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		F6B0DE861763286E00043B12 /* libKissXML.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKissXML.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6B0DE891763286E00043B12 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -51,8 +53,6 @@
 		F6B0DE9B1763286E00043B12 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		F6B0DEA31763286E00043B12 /* KissXMLTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KissXMLTests-Info.plist"; sourceTree = "<group>"; };
 		F6B0DEA51763286E00043B12 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F6B0DEA71763286E00043B12 /* KissXMLTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KissXMLTests.h; sourceTree = "<group>"; };
-		F6B0DEA81763286E00043B12 /* KissXMLTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KissXMLTests.m; sourceTree = "<group>"; };
 		F6B0DEB21763292B00043B12 /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
 		F6B0DEB31763292B00043B12 /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
 		F6B0DEB41763292B00043B12 /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
@@ -160,8 +160,8 @@
 		F6B0DEA11763286E00043B12 /* KissXMLTests */ = {
 			isa = PBXGroup;
 			children = (
-				F6B0DEA71763286E00043B12 /* KissXMLTests.h */,
-				F6B0DEA81763286E00043B12 /* KissXMLTests.m */,
+				F6045BF21765BD1D00E85BB0 /* KissXMLTests.h */,
+				F6045BF31765BD1D00E85BB0 /* KissXMLTests.m */,
 				F6B0DEA21763286E00043B12 /* Supporting Files */,
 			);
 			path = KissXMLTests;
@@ -329,7 +329,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6B0DEA91763286E00043B12 /* KissXMLTests.m in Sources */,
+				F6045BF41765BD1D00E85BB0 /* KissXMLTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
