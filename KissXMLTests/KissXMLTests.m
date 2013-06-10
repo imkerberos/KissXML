@@ -1,32 +1,13 @@
 //
-//  KissXMLTests.m
-//  KissXMLTests
+//  KissXMLElementTests.m
+//  KissXML
 //
-//  Created by Tobias Kräntzer on 08.06.13.
+//  Created by Tobias Kräntzer on 10.06.13.
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import "KissXMLTests.h"
+#import "KissXMLElementTests.h"
 
-@implementation KissXMLTests
-
-- (void)setUp
-{
-    [super setUp];
-    
-    // Set-up code here.
-}
-
-- (void)tearDown
-{
-    // Tear-down code here.
-    
-    [super tearDown];
-}
-
-- (void)testExample
-{
-    STFail(@"Unit tests are not implemented yet in KissXMLTests");
-}
+@implementation KissXMLElementTests
 
 @end

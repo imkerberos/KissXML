@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F6045BF71765BE1700E85BB0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F6045BF51765BE0100E85BB0 /* libxml2.dylib */; };
 		F6B0DE8A1763286E00043B12 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6B0DE891763286E00043B12 /* Cocoa.framework */; };
 		F6B0DE9C1763286E00043B12 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6B0DE9B1763286E00043B12 /* SenTestingKit.framework */; };
 		F6B0DE9D1763286E00043B12 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6B0DE891763286E00043B12 /* Cocoa.framework */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F6045BF51765BE0100E85BB0 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		F6B0DE861763286E00043B12 /* libKissXML.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKissXML.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6B0DE891763286E00043B12 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		F6B0DE8C1763286E00043B12 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -78,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6045BF71765BE1700E85BB0 /* libxml2.dylib in Frameworks */,
 				F6B0DE9C1763286E00043B12 /* SenTestingKit.framework in Frameworks */,
 				F6B0DE9D1763286E00043B12 /* Cocoa.framework in Frameworks */,
 				F6B0DEA01763286E00043B12 /* libKissXML.a in Frameworks */,
@@ -109,6 +112,7 @@
 		F6B0DE881763286E00043B12 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F6045BF51765BE0100E85BB0 /* libxml2.dylib */,
 				F6B0DE891763286E00043B12 /* Cocoa.framework */,
 				F6B0DE9B1763286E00043B12 /* SenTestingKit.framework */,
 				F6B0DE8B1763286E00043B12 /* Other Frameworks */,
@@ -381,6 +385,10 @@
 				HEADER_SEARCH_PATHS = /usr/include/libxml2/;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -408,6 +416,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2/;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
 				SDKROOT = macosx;
 			};
 			name = Release;
