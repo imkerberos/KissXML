@@ -254,6 +254,114 @@
     STAssertEqualObjects(nsTest4, ddTest4, nil);
 }
 
+- (void)testResolvePrefixForNamespaceURI
+{
+    // <root xmlns="example.com">
+	//   <node />
+	// </root>
+    
+    NSXMLElement *nsRoot = [NSXMLElement elementWithName:@"root"];
+	NSXMLElement *nsNode = [NSXMLElement elementWithName:@"node"];
+    NSXMLNode *nsNs = [NSXMLNode namespaceWithName:@"" stringValue:@"example.com"];
+    [nsRoot addNamespace:nsNs];
+	[nsRoot addChild:nsNode];
+
+    STAssertEqualObjects([nsNode resolvePrefixForNamespaceURI:@"example.com"], @"", nil);
+    
+    DDXMLElement *ddRoot = [DDXMLElement elementWithName:@"root"];
+	DDXMLElement *ddNode = [DDXMLElement elementWithName:@"node"];
+	DDXMLNode *ddNs = [DDXMLNode namespaceWithName:@"" stringValue:@"example.com"];
+	[ddRoot addNamespace:ddNs];
+	[ddRoot addChild:ddNode];
+    
+    STAssertEqualObjects([ddNode resolvePrefixForNamespaceURI:@"example.com"], @"", nil);
+}
+
+- (void)testElementsForLocalNameWithNilURI
+{
+    // <root xmlns="example.com">
+	//   <node />
+	// </root>
+    
+    NSXMLElement *nsRoot = [NSXMLElement elementWithName:@"root"];
+	NSXMLElement *nsNode = [NSXMLElement elementWithName:@"node"];
+    NSXMLNode *nsNs = [NSXMLNode namespaceWithName:@"" stringValue:@"example.com"];
+    [nsRoot addNamespace:nsNs];
+	[nsRoot addChild:nsNode];
+    
+    STAssertEquals([[nsRoot elementsForLocalName:@"node" URI:nil] count], (NSUInteger)0, nil);
+    
+    DDXMLElement *ddRoot = [DDXMLElement elementWithName:@"root"];
+	DDXMLElement *ddNode = [DDXMLElement elementWithName:@"node"];
+	DDXMLNode *ddNs = [DDXMLNode namespaceWithName:@"" stringValue:@"example.com"];
+	[ddRoot addNamespace:ddNs];
+	[ddRoot addChild:ddNode];
+    
+    STAssertEquals([[ddRoot elementsForLocalName:@"node" URI:nil] count], (NSUInteger)0, nil);
+}
+
+- (void)testElementsForLocalNameWithURI
+{
+    // <root xmlns="example.com">
+	//   <node />
+	// </root>
+    
+    NSXMLElement *nsRoot = [NSXMLElement elementWithName:@"root"];
+	NSXMLElement *nsNode = [NSXMLElement elementWithName:@"node"];
+    NSXMLNode *nsNs = [NSXMLNode namespaceWithName:@"" stringValue:@"example.com"];
+    [nsRoot addNamespace:nsNs];
+	[nsRoot addChild:nsNode];
+    
+    NSArray *nsElements = [nsRoot elementsForLocalName:@"node" URI:@"example.com"];
+    STAssertEquals([nsElements count], (NSUInteger)1, nil);
+    if ([nsElements count] == 1) {
+        STAssertEqualObjects([[nsElements objectAtIndex:0] name], @"node", nil);
+    }
+    
+    DDXMLElement *ddRoot = [DDXMLElement elementWithName:@"root"];
+	DDXMLElement *ddNode = [DDXMLElement elementWithName:@"node"];
+	DDXMLNode *ddNs = [DDXMLNode namespaceWithName:@"" stringValue:@"example.com"];
+	[ddRoot addNamespace:ddNs];
+	[ddRoot addChild:ddNode];
+    
+    NSArray *ddElements = [ddRoot elementsForLocalName:@"node" URI:@"example.com"];
+    STAssertEquals([ddElements count], (NSUInteger)1, nil);
+    if ([ddElements count] == 1) {
+        STAssertEqualObjects([[ddElements objectAtIndex:0] name], @"node", nil);
+    }
+}
+
+- (void)testElementsForLocalNameWithURI2
+{
+    // <root xmlns="example.com">
+	//   <node xmlns="test"/>
+	// </root>
+    
+    NSXMLElement *nsRoot = [NSXMLElement elementWithName:@"root"];
+	NSXMLElement *nsNode = [NSXMLElement elementWithName:@"node"];
+    [nsNode addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"test"]];
+    [nsRoot addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"example.com"]];
+	[nsRoot addChild:nsNode];
+    
+    NSArray *nsElements = [nsRoot elementsForLocalName:@"node" URI:@"test"];
+    STAssertEquals([nsElements count], (NSUInteger)1, nil);
+    if ([nsElements count] == 1) {
+        STAssertEqualObjects([[nsElements objectAtIndex:0] name], @"node", nil);
+    }
+    
+    DDXMLElement *ddRoot = [DDXMLElement elementWithName:@"root"];
+	DDXMLElement *ddNode = [DDXMLElement elementWithName:@"node"];
+    [ddNode addNamespace:[DDXMLNode namespaceWithName:@"" stringValue:@"test"]];
+	[ddRoot addNamespace:[DDXMLNode namespaceWithName:@"" stringValue:@"example.com"]];
+	[ddRoot addChild:ddNode];
+    
+    NSArray *ddElements = [ddRoot elementsForLocalName:@"node" URI:@"test"];
+    STAssertEquals([ddElements count], (NSUInteger)1, nil);
+    if ([ddElements count] == 1) {
+        STAssertEqualObjects([[ddElements objectAtIndex:0] name], @"node", nil);
+    }
+}
+
 - (void)testAddAttr
 {
     NSString *attrName  = @"artist";
