@@ -238,7 +238,7 @@
 	// We need to figure out what the prefix is for this URI.
 	// Then we search for elements that are named prefix:localName OR (named localName AND have the given URI).
 	
-	NSString *prefix = [self _recursiveResolvePrefixForURI:uri atNode:(xmlNodePtr)genericPtr];
+	NSString *prefix = [self _recursiveResolvePrefixForURI:uri atNode:(xmlNodePtr)genericPtr isDefaultNamespace:NO];
 	if (prefix)
 	{
 		NSString *name = [NSString stringWithFormat:@"%@:%@", prefix, localName];
@@ -644,11 +644,13 @@
 /**
  * Recursively searches the given node for a namespace with the given URI, and a set prefix.
 **/
-- (NSString *)_recursiveResolvePrefixForURI:(NSString *)uri atNode:(xmlNodePtr)nodePtr
+- (NSString *)_recursiveResolvePrefixForURI:(NSString *)uri atNode:(xmlNodePtr)nodePtr isDefaultNamespace:(BOOL)isDefaultNamespace
 {
 	// This is a private/internal method
 	
-	if (nodePtr == NULL) return nil;
+	if (nodePtr == NULL) {
+        return isDefaultNamespace ? @"" : nil;
+    }
 	
 	xmlNsPtr ns = nodePtr->nsDef;
 	if (ns)
@@ -662,13 +664,17 @@
 				{
 					return [NSString stringWithUTF8String:((const char *)ns->prefix)];
 				}
-			}
+                else
+                {
+                    isDefaultNamespace = YES;
+                }
+            }
 			ns = ns->next;
 			
 		} while (ns);
 	}
 	
-	return [self _recursiveResolvePrefixForURI:uri atNode:nodePtr->parent];
+	return [self _recursiveResolvePrefixForURI:uri atNode:nodePtr->parent isDefaultNamespace:isDefaultNamespace];
 }
 
 /**
@@ -683,8 +689,8 @@
 	
 	// We can't use xmlSearchNsByHref because it will return xmlNsPtr's with NULL prefixes.
 	// We're looking for a definitive prefix for the given URI.
-	
-	return [self _recursiveResolvePrefixForURI:namespaceURI atNode:(xmlNodePtr)genericPtr];
+    
+	return [self _recursiveResolvePrefixForURI:namespaceURI atNode:(xmlNodePtr)genericPtr isDefaultNamespace:NO];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
