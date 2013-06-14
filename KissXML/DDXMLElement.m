@@ -120,71 +120,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Helper method elementsForName and elementsForLocalName:URI: so work isn't duplicated.
- * The name parameter is required, all others are optional.
-**/
-- (NSArray *)_elementsForName:(NSString *)name
-                    localName:(NSString *)localName
-                       prefix:(NSString *)prefix
-                          uri:(NSString *)uri
-{
-	// This is a private/internal method
-	
-	// Rule : !uri             => match: name
-	// Rule : uri && hasPrefix => match: name || (localName && uri)
-	// Rule : uri && !hasPefix => match: name && uri
-	
-	xmlNodePtr node = (xmlNodePtr)genericPtr;
-	
-	NSMutableArray *result = [NSMutableArray array];
-	
-	BOOL hasPrefix = [prefix length] > 0;
-	
-	const xmlChar *xmlName      = [name xmlChar];
-	const xmlChar *xmlLocalName = [localName xmlChar];
-	const xmlChar *xmlUri       = [uri xmlChar];
-	
-	xmlNodePtr child = node->children;
-	while (child)
-	{
-		if (IsXmlNodePtr(child))
-		{
-			BOOL match = NO;
-			
-			if (uri == nil)
-			{
-				match = xmlStrEqual(child->name, xmlName);
-			}
-			else
-			{
-				BOOL nameMatch      = xmlStrEqual(child->name, xmlName);
-				BOOL localNameMatch = xmlStrEqual(child->name, xmlLocalName);
-				
-				BOOL uriMatch = NO;
-				if (child->ns)
-				{
-					uriMatch = xmlStrEqual(child->ns->href, xmlUri);
-				}
-				
-				if (hasPrefix)
-					match = nameMatch || (localNameMatch && uriMatch);
-				else
-					match = nameMatch && uriMatch;
-			}
-			
-			if (match)
-			{
-				[result addObject:[DDXMLElement nodeWithElementPrimitive:child owner:self]];
-			}
-		}
-		
-		child = child->next;
-	}
-	
-	return result;
-}
-
-/**
  * Returns the child element nodes (as DDXMLElement objects) of the receiver that have a specified name.
  * 
  * If name is a qualified name, then this method invokes elementsForLocalName:URI: with the URI parameter set to
@@ -199,11 +134,6 @@
 	
 	if (name == nil) return [NSArray array];
 	
-	// We need to check to see if name has a prefix.
-	// If it does have a prefix, we need to figure out what the corresponding URI is for that prefix,
-	// and then search for any elements that have the same name (including prefix) OR have the same URI.
-	// Otherwise we loop through the children as usual and do a string compare on the name
-	
 	NSString *prefix;
 	NSString *localName;
 	
@@ -212,19 +142,32 @@
 	if ([prefix length] > 0)
 	{
 		xmlNodePtr node = (xmlNodePtr)genericPtr;
-		
-		// Note: We use xmlSearchNs instead of resolveNamespaceForName: because
-		// we want to avoid creating wrapper objects when possible.
-		
+
 		xmlNsPtr ns = xmlSearchNs(node->doc, node, [prefix xmlChar]);
+        NSString *uri = nil;
 		if (ns)
 		{
-			NSString *uri = [NSString stringWithUTF8String:((const char *)ns->href)];
-			return [self _elementsForName:name localName:localName prefix:prefix uri:uri];
+			uri = [NSString stringWithUTF8String:((const char *)ns->href)];
 		}
-	}
-	
-	return [self _elementsForName:name localName:localName prefix:prefix uri:nil];
+        return [self elementsForLocalName:localName URI:uri];
+	} else {
+        
+        NSMutableArray *result = [NSMutableArray array];
+        
+        const xmlChar *xmlName = [name xmlChar];
+        
+        xmlNodePtr node = (xmlNodePtr)genericPtr;
+        xmlNodePtr child = node->children;
+        while (child)
+        {
+            if (IsXmlNodePtr(child) && xmlStrEqual(child->name, xmlName))
+            {
+                [result addObject:[DDXMLElement nodeWithElementPrimitive:child owner:self]];
+            }
+            child = child->next;
+        }
+        return result;
+    }
 }
 
 - (NSArray *)elementsForLocalName:(NSString *)localName URI:(NSString *)uri
@@ -233,27 +176,47 @@
 	DDXMLNotZombieAssert();
 #endif
 	
-	if (localName == nil) return [NSArray array];
+	if (localName == nil || uri == nil) return [NSArray array];
 	
-	// We need to figure out what the prefix is for this URI.
-	// Then we search for elements that are named prefix:localName OR (named localName AND have the given URI).
-	
-	NSString *prefix = [self _recursiveResolvePrefixForURI:uri atNode:(xmlNodePtr)genericPtr];
-	if (prefix)
-	{
-		NSString *name = [NSString stringWithFormat:@"%@:%@", prefix, localName];
-		
-		return [self _elementsForName:name localName:localName prefix:prefix uri:uri];
-	}
-	else
-	{
-		NSString *prefix;
-		NSString *realLocalName;
-		
-		[DDXMLNode getPrefix:&prefix localName:&realLocalName forName:localName];
-		
-		return [self _elementsForName:localName localName:realLocalName prefix:prefix uri:uri];
-	}
+    NSMutableArray *result = [NSMutableArray array];
+    
+    xmlNodePtr node = (xmlNodePtr)genericPtr;
+    xmlNodePtr child = node->children;
+    while (child)
+    {
+        if (IsXmlNodePtr(child))
+        {
+            NSString *childName = [NSString stringWithUTF8String:child->name];
+            
+            NSString *childPrefix;
+            NSString *childLocalName;
+            
+            [DDXMLNode getPrefix:&childPrefix
+                       localName:&childLocalName
+                         forName:childName];
+            
+            xmlNsPtr ns = NULL;
+            if (child->ns) {
+                ns = child->ns;
+            } else if ([childPrefix length] > 0) {
+                ns = xmlSearchNs(child->doc, child, [childPrefix xmlChar]);
+            } else {
+                ns = xmlSearchNs(child->doc, child, NULL);
+            }
+            
+            NSString *childURI = nil;
+            if (ns) {
+                childURI = [NSString stringWithUTF8String:((const char *)ns->href)];
+            }
+            
+            if ([childURI isEqualToString:uri] && [childLocalName isEqualToString:localName]) {
+                [result addObject:[DDXMLElement nodeWithElementPrimitive:child owner:self]];
+            }
+        }
+        child = child->next;
+    }
+    return result;
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -644,11 +607,13 @@
 /**
  * Recursively searches the given node for a namespace with the given URI, and a set prefix.
 **/
-- (NSString *)_recursiveResolvePrefixForURI:(NSString *)uri atNode:(xmlNodePtr)nodePtr
+- (NSString *)_recursiveResolvePrefixForURI:(NSString *)uri atNode:(xmlNodePtr)nodePtr isDefaultNamespace:(BOOL)isDefaultNamespace
 {
 	// This is a private/internal method
 	
-	if (nodePtr == NULL) return nil;
+	if (nodePtr == NULL) {
+        return isDefaultNamespace ? @"" : nil;
+    }
 	
 	xmlNsPtr ns = nodePtr->nsDef;
 	if (ns)
@@ -662,13 +627,17 @@
 				{
 					return [NSString stringWithUTF8String:((const char *)ns->prefix)];
 				}
-			}
+                else
+                {
+                    isDefaultNamespace = YES;
+                }
+            }
 			ns = ns->next;
 			
 		} while (ns);
 	}
 	
-	return [self _recursiveResolvePrefixForURI:uri atNode:nodePtr->parent];
+	return [self _recursiveResolvePrefixForURI:uri atNode:nodePtr->parent isDefaultNamespace:isDefaultNamespace];
 }
 
 /**
@@ -683,8 +652,8 @@
 	
 	// We can't use xmlSearchNsByHref because it will return xmlNsPtr's with NULL prefixes.
 	// We're looking for a definitive prefix for the given URI.
-	
-	return [self _recursiveResolvePrefixForURI:namespaceURI atNode:(xmlNodePtr)genericPtr];
+    
+	return [self _recursiveResolvePrefixForURI:namespaceURI atNode:(xmlNodePtr)genericPtr isDefaultNamespace:NO];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
