@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "70A8537565E8EBD1B9D364933832E742DD9D1D11",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "02531E7A9E8F7E1CA2D58339408C0391CC56817F" : 0,
+    "70A8537565E8EBD1B9D364933832E742DD9D1D11" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "916315DF-369F-4B44-AB24-E532C5482434",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "02531E7A9E8F7E1CA2D58339408C0391CC56817F" : "..\/NetForce\/ucsmth",
+    "70A8537565E8EBD1B9D364933832E742DD9D1D11" : "KissXML\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "KissXML",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "KissXML.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "bitbucket.org:imkerberos\/ucsmth.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "02531E7A9E8F7E1CA2D58339408C0391CC56817F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:imkerberos\/KissXML.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "70A8537565E8EBD1B9D364933832E742DD9D1D11"
+    }
+  ]
+}
