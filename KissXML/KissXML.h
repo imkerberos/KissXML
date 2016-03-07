@@ -19,3 +19,4 @@ FOUNDATION_EXPORT const unsigned char KissXMLVersionString[];
 
 #import <KissXML/DDXML.h>
 #import <KissXML/DDXMLElementAdditions.h>
+#import <KissXML/DDXML+HTML.h>

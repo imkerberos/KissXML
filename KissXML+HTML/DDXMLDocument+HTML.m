@@ -9,87 +9,40 @@ typedef NSUInteger DocumentContent;
 
 @implementation DDXMLDocument (HTML)
 
-- (void)setError:(NSError **)error code:(NSInteger)code
+- (id) initWithHTMLData: (NSData*) data encoding: (NSStringEncoding) encoding options: (NSUInteger) options error: (NSError**) error
 {
-    if (!error) {
-        return;
-    }
-
-    *error = [NSError
-        errorWithDomain:@"DDXMLErrorDomain"
-                   code:code
-               userInfo:nil
-    ];
-}
-
-- (id)initWithData:(NSData *)data
-           content:(DocumentContent)content
-           options:(NSUInteger)options
-             error:(NSError **)error
-{
-    if (data == nil || [data length] == 0) {
-        [self setError:error code:0];
-        [self release];
+    
+    CFStringEncoding cfenc = CFStringConvertNSStringEncodingToEncoding(encoding);
+    CFStringRef cfencstr = CFStringConvertEncodingToIANACharSetName(cfenc);
+    const char *enc = CFStringGetCStringPtr(cfencstr, 0);
+    
+    if (data == nil || [data length] == 0)
+    {
+        if (error) *error = [NSError errorWithDomain:@"DDXMLErrorDomain" code:0 userInfo:nil];
+        
         return nil;
     }
-
     xmlKeepBlanksDefault(0);
-
-    xmlDocPtr doc;
-    if (HTMLDocument == content) {
-        doc = htmlReadMemory(
-            [data bytes], [data length],
-            "", NULL, options
-        ); 
-    } else {
-        doc = xmlReadMemory(
-            [data bytes], [data length],
-            "", NULL, options
-        );
-    }
-
-    if (doc == NULL) {
-        [self setError:error code:1];
-        [self release];
+    
+    xmlDocPtr doc =htmlReadMemory (data.bytes, data.length, "", enc, options);
+    if (doc == NULL)
+    {
+        if (error) *error = [NSError errorWithDomain:@"DDXMLErrorDomain" code:1 userInfo:nil];
+        
         return nil;
     }
-
-    return [self initWithCheckedPrimitive:(xmlKindPtr)doc];
+    
+    return [self initWithDocPrimitive:doc owner:nil];
 }
 
-- (id)initWithHTMLString:(NSString *)string
-                 options:(NSUInteger)options
-                   error:(NSError **)error
+- (id) initWithHTMLString: (NSString*) string options: (NSUInteger) options error: (NSError**) error
 {
-    return [self
-        initWithHTMLData:[string dataUsingEncoding:NSUTF8StringEncoding]
-                 options:options
-                   error:error
-    ];
+    return [self initWithHTMLData: [string dataUsingEncoding: NSUTF8StringEncoding]
+                          options: options error: error];
 }
 
-- (id)initWithHTMLData:(NSData *)data
-               options:(NSUInteger)options
-                 error:(NSError **)error
+- (id) initWithHTMLData: (NSData*) data options: (NSUInteger) options error: (NSError**) error
 {
-    return [self
-        initWithData:data
-             content:HTMLDocument
-             options:options
-               error:error
-    ];
+    return [self initWithHTMLData: data encoding: NSUTF8StringEncoding options: options error: error];
 }
-
-- (id)initWithData:(NSData *)data
-           options:(NSUInteger)options
-             error:(NSError **)error
-{
-    return [self
-        initWithData:data
-             content:XMLDocument
-             options:options
-               error:error
-    ];
-}
-
 @end
